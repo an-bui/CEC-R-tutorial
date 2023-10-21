@@ -1,0 +1,10 @@
+---
+title: "CEC R tutorial"
+author: "An Bui"
+date: "2023-10-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
