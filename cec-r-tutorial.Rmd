@@ -1,10 +1,403 @@
 ---
-title: "CEC R tutorial"
-author: "An Bui"
-date: "2023-10-21"
-output: html_document
+title: "Tutorial"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    css: css/style.css
+runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(learnr)
+library(tidyverse)
+library(ggeffects)
+
+knitr::opts_chunk$set(echo = FALSE)
 ```
+
+
+## About and credits
+
+## 1. Parts of code
+
+Code lives in scripts. A **script** is a file where all of your code lives. You can think of your script as a place where you can save all the code you write.  
+
+Code shows up in the default RStudio color scheme in black, blue, and dark green. You can change the color scheme by going to Tools > Global Options > Appearance and choosing an "Editor Theme". I'll change the scheme to "Solarized Dark", which is a little easier to see.  
+
+Comments show up in grey: these are useful for annotating your code. Annotations are super useful for keeping notes about what your code is doing. You can create a comment by putting a pound sign at the beginning of a line.  
+
+You can also orient yourself in your script using code sections. You can insert a section by going to Code > Insert Section from the toolbar. There is a table of contents you can use to navigate in the right hand side of the script pane, or in the bottom left.  
+
+### Objects
+
+Objects are saved in the upper right corner of the RStudio window. Objects can take on any values: you assign an object a value using the assignment operator: a left-facing arrow `<-`
+
+In this line of code, we'll  
+  1. create a new object called "yellow"  
+  2. use the assignment operator to assign the object a value (5)  
+
+You can run code by putting your cursor on the line of code you want to run and hitting command + return (Mac) or control + return (Windows). In this tutorial, you can hit the "Run Code" button to the right hand side at the top of a code box.
+
+```{r yellow, exercise = TRUE}
+yellow <- 5
+yellow
+```
+
+If you were using RStudio, you would now see this in the upper right corner.  
+
+Try creating an object called "blue" and assign it the value 10.
+
+```{r blue, exercise = TRUE}
+
+```
+
+```{r blue-solution}
+blue <- 10
+blue
+```
+
+Try creating an object called "greeting" and assign it the value "Hello!"
+
+```{r greeting, exercise = TRUE}
+
+```
+
+```{r greeting-solution}
+greeting <- "Hello!"
+greeting
+```
+
+When creating the objects yellow and blue, you assigned them numerical values. "Hello!" is not a number - it is a character.
+
+### Functions
+
+Functions are the backbone of R usage. They allow you to do things: take the mean of a bunch of numbers, store your data, create figures, and much more. 
+
+Functions always take the form of an object with a set of parentheses at the end, and almost always are named after what they do. For example, the function to take the mean of something is `mean()`.
+
+Within the parentheses, functions take "arguments", which tell the function what to work on. You can think of using an argument as telling R: use this function on this thing.  
+
+Try taking the mean of 10, 20, and 30.
+
+```{r mean, exercise = TRUE}
+
+```
+
+```{r mean-solution}
+mean(10, 20, 30)
+```
+
+If you ever forget what arguments a function takes, you can look at the function's help page, which you can access by typing ?function name in the console. Try looking at the help page for mean() by running ?mean.
+
+```{r mean-help, exercise = TRUE}
+
+```
+
+```{r mean-help-solution}
+?mean
+```
+
+While useful, this isn't always the most efficient way to calculate a mean. Sometimes, you might have a list of 10 numbers, for example:
+
+```{r big-list, echo = TRUE}
+big_list <- c(4, 5, 1, 2, 3, 5, 6, 7, 8, 9)
+```
+
+You can put an object in a function as an argument. Try taking the mean of `big_list`.
+
+```{r mean-big-list-setup}
+big_list <- c(4, 5, 1, 2, 3, 5, 6, 7, 8, 9)
+```
+
+```{r mean-big-list, exercise = TRUE}
+
+```
+
+```{r mean-big-list-solution}
+mean(big_list)
+```
+
+But let's say you want to save the mean value that you just calculated so that you don't have to do it over and over again. Try saving `mean(big_list)` as a object called `mean_calculation`.
+
+```{r mean-calculation-setup}
+big_list <- c(4, 5, 1, 2, 3, 5, 6, 7, 8, 9)
+```
+
+```{r mean-calculation, exercise = TRUE}
+
+```
+
+```{r mean-calculation-solution}
+mean_calculation <- mean(big_list)
+```
+
+## 2. Packages 
+
+Packages are collections of functions. You can see what packages you have by looking at the "Packages" tab in the lower right corner of the RStudio window. Some packages are pre-installed, but you can also install other packages as you wish.  
+
+Lots of people write packages to share code with others - if you ever want to do something in R, chances are that someone has written a package for it.  
+
+You can install a package using the function `install.packages()` in the Console. We'll try installing a package called `tidyverse`, which is a bunch of packages in one. 
+
+Even though you've installed a package, you still need to "load" it. You can do this using the `library()` function. In this tutorial, `tidyverse` is already loaded in, but this is what the code would look like in a script:
+
+```{r load-in-tidyverse, eval = FALSE, echo = TRUE}
+library(tidyverse)
+```
+
+## 3. Reading in data
+
+You can work with data in R by "reading it in". You can create an object to "save" the data in R, then do whatever you want to it without ever changing the original file, like what we did with `mean_calculation`.
+
+We'll use the unpaired anemone data from earlier this week, and read it in using the function `read_csv()` from the tidyverse.
+
+```{r anemone-read, exercise = TRUE}
+
+```
+
+```{r anemone-read-solution}
+anemone_data <- read_csv("anemone_unpaired.csv")
+```
+
+You can look at the data using the function `View()` in the console.
+
+## 4. Wrangling your data 
+
+Data is almost always messy - there might be typos, spaces where there shouldn't be, wrong numbers, etc. There are lots of functions that allow you to "wrangle" your data: any form of cleaning or manipulation of data to eventually be able to plot and analyze it.
+
+The anemone dataset is not especially messy, but there are a few ways we can wrangle it to make it easier to work with. I'll refer to the `anemone_data` object as a "dataframe", which is the standard term for any object with rows and columns in R.
+
+### Selecting columns
+
+Let's say we only want to work with the replicate pool and treatment columns in the data frame. 
+
+The function for selecting columns is from the `tidyverse` package, and is called `select()`. Before using it, look at the help page for `select()` using `?select` in the console.
+
+```{r select-help, exercise = TRUE}
+?select
+```
+
+Try selecting the columns `replicate_pool` and `treatment` using the `select()` function.
+
+```{r select-exercise, exercise = TRUE}
+
+```
+
+```{r select-exercise-solution}
+# create an object called "selected"
+# take the anemone_data object AND THEN
+selected <- anemone_data |>
+  # select the columns replicate_pool and treatment
+  select(replicate_pool, treatment)
+```
+
+## 5. Creating figures
+
+After looking at the data, it's often useful to visualize it in a graph to get a sense of what the patterns might be before you start trying any statistical tests. 
+
+There are a few ways to plot things in R, but for this workshop we'll use `ggplot()`, which is a function within the `tidyverse`.
+
+`ggplot` works in the following way: 
+  1. tell R that you want to use the `ggplot` function and include the data frame name as the `data` argument
+  2. specify the aesthetics using the `aes()` function: what are your x and y axes?
+  3. specify a geometry using a `geom_()` function: what kind of plot do you want to make?
+
+Let's try making a boxplot with the anemone data. 
+
+```{r anemone-boxplot, exercise = TRUE}
+
+```
+
+```{r anemone-boxplot-solution}
+anemone_boxplot <- ggplot(data = anemone_data,
+       aes(x = treatment, y = column_temperature, fill = treatment)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("Control" = "orange", "Removal" = "salmon")) +
+  labs(x = "Treatment", y = "Column Temperature (C)",
+       title = "Median removal temperature is slightly higher than control") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+anemone_boxplot
+```
+
+Sometimes, a boxplot can be kind of confusing to look at if you want to compare means (which is what you're doing with a t-test). We can try a different kind of plot in `ggplot` to do that.
+
+```{r anemone-jitter, echo = TRUE, exercise = TRUE}
+anemone_jitter <- ggplot(data = anemone_data,
+       aes(x = treatment, y = column_temperature)) +
+  geom_jitter(aes(color = treatment),
+              alpha = 0.4) +
+  stat_summary(geom = "pointrange", fun.data = mean_se, aes(color = treatment)) +
+  scale_color_manual(values = c("Control" = "purple", "Removal" = "goldenrod")) +
+  labs(x = "Treatment", y = "Column Temperature (C)",
+       title = "Mean removal temperature is slightly higher than control") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+anemone_jitter
+```
+
+## 6. statistical tests
+
+Most statistical tests in R take the same form: `test(response ~ predictor)`.  
+
+So for example, let's say we want to do a t-test on the anemone data, with column temperature as the response and treatment as the predictor.
+
+```{r anemone-unpaired-t, exercise = TRUE}
+
+```
+
+```{r anemone-unpaired-t-solution}
+t.test(column_temperature ~ treatment,
+       data = anemone_data)
+```
+
+Or a paired t-test:
+
+```{r anemone-paired-t, exercise = TRUE}
+
+```
+
+```{r anemone-paired-t-solution}
+t.test(column_temperature ~ treatment,
+       data = anemone_data,
+       paired = TRUE)
+```
+
+Same deal with a Wilcox test (the non-parametric equivalent of a t-test):
+
+```{r wilcox-test, exercise = TRUE}
+
+```
+
+```{r wilcox-test-solution}
+wilcox.test(column_temperature ~ treatment,
+            data = anemone_data)
+```
+
+Or a Mann-Whitney U (the non-parametric equivalent of a paired t-test):
+
+```{r mann-whitney, exercise = TRUE}
+
+```
+
+```{r mann-whitney-solution}
+wilcox.test(column_temperature ~ treatment,
+            data = anemone_data,
+            paired = TRUE)
+```
+
+## 7. Working with pond data
+
+### a. load in the data
+
+```{r pond-data, echo = TRUE}
+pond_data <- read_csv("pond_data_simplified.csv")
+```
+
+### b. make a figure
+
+```{r pond-data-figure}
+ggplot(data = pond_data,
+       aes(x = surface_temp_c, y = temp_at_05_m_c)) +
+  geom_point()
+```
+
+```{r pond-data-figure-solution}
+ggplot(data = pond_data,
+       aes(x = surface_temp_c, y = temp_at_05_m_c)) +
+  geom_point()
+```
+
+### c. linear regression
+
+How does surface temperature predict/explain temperature at 0.5 m?
+
+```{r pond-model, exercise = TRUE}
+
+```
+
+```{r pond-model-solution}
+pond_model <- lm(temp_at_05_m_c ~ surface_temp_c,
+                 data = pond_data)
+pond_model
+```
+
+Look at the summary using `summary()`:
+
+```{r pond-model-summary, exercise = TRUE}
+
+```
+
+```{r pond-model-summary-solution}
+summary(pond_model)
+```
+
+You can also look at the confidence interval around the estimate for the slope of the line:
+
+```{r pond-confint, exercise = TRUE}
+confint(pond_model)
+```
+
+```{r pond-confint-solution}
+confint(pond_model)
+```
+
+Interpretation: as surface temperature increases, temperature at 0.5 m also increases. For every 1 degree of increased surface temperature, we expect an increase of 0.6 [95% confidence interval: 0.35, 0.94] degrees in temperature at 0.5 m.
+
+### Visualizing model predictions with raw data
+
+After creating a linear model, you might want to put the model line on top of the raw data. You can do this using the packages `ggeffects` and the `ggplot` function together. In general, the steps are:
+1. generate model predictions (the x- and y- values of the linear regression line) using the `ggpredict` function from the `ggeffects` package  
+2. create a plot using two data frames: `pond_data`, which has your raw data, and `model_predictions`, which is the data frame of model predictions  
+
+Try generating the model predictions below.
+
+```{r model-predictions, exercise = TRUE}
+
+```
+
+```{r model-predictions-solution}
+model_predictions <- ggpredict(pond_model, terms = "surface_temp_c")
+model_predictions
+```
+
+And then create a plot:
+
+```{r model-plot, exercise = TRUE}
+
+```
+
+```{r model-plot-solution}
+# first, use the pond_data data frame to plot surface_temp_c on the x axis and temp_at_05_m_c on the y axis
+ggplot(data = pond_data,
+       aes(x = surface_temp_c, y = temp_at_05_m_c)) +
+  # plot the raw data
+  geom_point(shape = 21) +
+  
+  # then, use the model_predictions data frame to plot the x column on the x axis, and the predicted column on the y axis
+  geom_line(data = model_predictions,
+            aes(x = x, y = predicted),
+            color = "blue",
+            linewidth = 1) +
+  # add a ribbon around the confidence interval
+  geom_ribbon(data = model_predictions,
+              aes(x = x, y = predicted,
+                  ymax = conf.high, ymin = conf.low),
+              # change the transparency of the ribbon
+              alpha = 0.2,
+              fill = "blue") +
+  
+  # label the axes and title
+  labs(x = "Surface temperature (degrees Celsius)",
+       y = "Temperature at 0.5 m (degrees Celsius)",
+       title = "Surface temperature significantly predicts temperature 
+       at 0.5 m") +
+  
+  # theme options
+  theme_bw()
+```
+
+
