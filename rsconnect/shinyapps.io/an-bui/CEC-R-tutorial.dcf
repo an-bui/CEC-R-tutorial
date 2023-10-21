@@ -1,0 +1,13 @@
+name: CEC-R-tutorial
+title: CEC-R-tutorial
+username:
+account: an-bui
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10266682
+bundleId: 7833094
+url: https://an-bui.shinyapps.io/CEC-R-tutorial/
+when: 1697906111.9653
+lastSyncTime: 1697906111.96532
+asMultiple: FALSE
+asStatic: FALSE

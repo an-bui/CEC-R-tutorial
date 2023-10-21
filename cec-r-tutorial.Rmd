@@ -37,7 +37,7 @@ In this line of code, we'll
   1. create a new object called "yellow"  
   2. use the assignment operator to assign the object a value (5)  
 
-You can run code by putting your cursor on the line of code you want to run and hitting command + return (Mac) or control + return (Windows). In this tutorial, you can hit the "Run Code" button to the right hand side at the top of a code box.
+You can run code by putting your cursor on the line of code you want to run and hitting command + return (Mac) or control + enter (Windows). In this tutorial, you can hit the "Run Code" button to the right hand side at the top of a code box.
 
 ```{r yellow, exercise = TRUE}
 yellow <- 5
@@ -153,14 +153,18 @@ You can work with data in R by "reading it in". You can create an object to "sav
 We'll use the unpaired anemone data from earlier this week, and read it in using the function `read_csv()` from the tidyverse.
 
 ```{r anemone-read, exercise = TRUE}
-
-```
-
-```{r anemone-read-solution}
-anemone_data <- read_csv("anemone_unpaired.csv")
+anemone_data <- read_csv("data/anemone_unpaired.csv")
 ```
 
 You can look at the data using the function `View()` in the console.
+
+```{r anemone-view-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
+```{r anemone-view, exercise = TRUE}
+View(anemone_data)
+```
 
 ## 4. Wrangling your data 
 
@@ -180,7 +184,14 @@ The function for selecting columns is from the `tidyverse` package, and is calle
 
 Try selecting the columns `replicate_pool` and `treatment` using the `select()` function.
 
+```{r select-exercise-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r select-exercise, exercise = TRUE}
+
+
+
 
 ```
 
@@ -205,7 +216,12 @@ There are a few ways to plot things in R, but for this workshop we'll use `ggplo
 
 Let's try making a boxplot with the anemone data. 
 
+```{r anemone-boxplot-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r anemone-boxplot, exercise = TRUE}
+
 
 ```
 
@@ -224,7 +240,12 @@ anemone_boxplot
 
 Sometimes, a boxplot can be kind of confusing to look at if you want to compare means (which is what you're doing with a t-test). We can try a different kind of plot in `ggplot` to do that.
 
-```{r anemone-jitter, echo = TRUE, exercise = TRUE}
+```{r anemone-jitter-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
+
+```{r anemone-jitter, exercise = TRUE}
 anemone_jitter <- ggplot(data = anemone_data,
        aes(x = treatment, y = column_temperature)) +
   geom_jitter(aes(color = treatment),
@@ -245,6 +266,10 @@ Most statistical tests in R take the same form: `test(response ~ predictor)`.
 
 So for example, let's say we want to do a t-test on the anemone data, with column temperature as the response and treatment as the predictor.
 
+```{r anemone-unpaired-t-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r anemone-unpaired-t, exercise = TRUE}
 
 ```
@@ -256,7 +281,14 @@ t.test(column_temperature ~ treatment,
 
 Or a paired t-test:
 
+```{r anemone-paired-t-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r anemone-paired-t, exercise = TRUE}
+
+
+
 
 ```
 
@@ -268,7 +300,13 @@ t.test(column_temperature ~ treatment,
 
 Same deal with a Wilcox test (the non-parametric equivalent of a t-test):
 
+```{r wilcox-test-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r wilcox-test, exercise = TRUE}
+
+
 
 ```
 
@@ -279,7 +317,12 @@ wilcox.test(column_temperature ~ treatment,
 
 Or a Mann-Whitney U (the non-parametric equivalent of a paired t-test):
 
+```{r mann-whitney-setup}
+anemone_data <- read_csv("data/anemone_unpaired.csv")
+```
+
 ```{r mann-whitney, exercise = TRUE}
+
 
 ```
 
@@ -293,16 +336,22 @@ wilcox.test(column_temperature ~ treatment,
 
 ### a. load in the data
 
-```{r pond-data, echo = TRUE}
-pond_data <- read_csv("pond_data_simplified.csv")
+```{r pond-data, exercise = TRUE}
+
+```
+
+```{r pond-data-solution}
+pond_data <- read_csv("data/pond_data_simplified.csv")
 ```
 
 ### b. make a figure
 
-```{r pond-data-figure}
-ggplot(data = pond_data,
-       aes(x = surface_temp_c, y = temp_at_05_m_c)) +
-  geom_point()
+```{r pond-data-figure-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+```
+
+```{r pond-data-figure, exercise = TRUE}
+
 ```
 
 ```{r pond-data-figure-solution}
@@ -315,7 +364,12 @@ ggplot(data = pond_data,
 
 How does surface temperature predict/explain temperature at 0.5 m?
 
+```{r pond-model-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+```
+
 ```{r pond-model, exercise = TRUE}
+
 
 ```
 
@@ -327,15 +381,29 @@ pond_model
 
 Look at the summary using `summary()`:
 
+```{r pond-model-summary-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+pond_model <- lm(temp_at_05_m_c ~ surface_temp_c,
+                 data = pond_data)
+```
+
 ```{r pond-model-summary, exercise = TRUE}
+
 
 ```
 
 ```{r pond-model-summary-solution}
+
 summary(pond_model)
 ```
 
 You can also look at the confidence interval around the estimate for the slope of the line:
+
+```{r pond-confint-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+pond_model <- lm(temp_at_05_m_c ~ surface_temp_c,
+                 data = pond_data)
+```
 
 ```{r pond-confint, exercise = TRUE}
 confint(pond_model)
@@ -347,13 +415,19 @@ confint(pond_model)
 
 Interpretation: as surface temperature increases, temperature at 0.5 m also increases. For every 1 degree of increased surface temperature, we expect an increase of 0.6 [95% confidence interval: 0.35, 0.94] degrees in temperature at 0.5 m.
 
-### Visualizing model predictions with raw data
+### d. visualizing model predictions with raw data
 
 After creating a linear model, you might want to put the model line on top of the raw data. You can do this using the packages `ggeffects` and the `ggplot` function together. In general, the steps are:
 1. generate model predictions (the x- and y- values of the linear regression line) using the `ggpredict` function from the `ggeffects` package  
 2. create a plot using two data frames: `pond_data`, which has your raw data, and `model_predictions`, which is the data frame of model predictions  
 
 Try generating the model predictions below.
+
+```{r model-predictions-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+pond_model <- lm(temp_at_05_m_c ~ surface_temp_c,
+                 data = pond_data)
+```
 
 ```{r model-predictions, exercise = TRUE}
 
@@ -365,6 +439,13 @@ model_predictions
 ```
 
 And then create a plot:
+
+```{r model-plot-setup}
+pond_data <- read_csv("data/pond_data_simplified.csv")
+pond_model <- lm(temp_at_05_m_c ~ surface_temp_c,
+                 data = pond_data)
+model_predictions <- ggpredict(pond_model, terms = "surface_temp_c")
+```
 
 ```{r model-plot, exercise = TRUE}
 
